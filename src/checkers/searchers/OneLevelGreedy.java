@@ -25,7 +25,6 @@ public class OneLevelGreedy extends CheckersSearcher {
         Optional<Duple<Integer, Move>> best = Optional.empty();
         for (Checkerboard alternative: board.getNextBoards()) {
             numNodes += 1;
-            // If the current player does not capture/get to go twice, negation = -1, else = 1.
             int negation = board.getCurrentPlayer() != alternative.getCurrentPlayer() ? -1 : 1;
             int scoreFor = negation * getEvaluator().applyAsInt(alternative);
             if (best.isEmpty() || best.get().getFirst() < scoreFor) {
