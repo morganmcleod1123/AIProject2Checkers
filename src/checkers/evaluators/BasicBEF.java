@@ -6,6 +6,6 @@ import java.util.function.ToIntFunction;
 
 public class BasicBEF implements ToIntFunction<Checkerboard> {
     public int applyAsInt(Checkerboard c) {
-        return (c.numPiecesOf(c.getCurrentPlayer().opponent()) - c.numPiecesOf(c.getCurrentPlayer()));
+        return (c.numPiecesOf(c.getCurrentPlayer()) - c.numPiecesOf(c.getCurrentPlayer().opponent()));
     }
 }
