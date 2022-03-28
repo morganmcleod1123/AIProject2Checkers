@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
-// Help with Checkers Strategy: https://hobbylark.com/board-games/Checkers-Strategy-Tactics-How-To-Win
-
-// Basic Idea: It is good strategy to have good positioning, and good positioning entails taking control of the
-// center of the board and grouping your pieces together.
+// This is a board evaluation function which looks at a given Checkerboard and returns an integer representing
+//      how good the situation is for the current player. SmarterBEF mainly compares who has more pieces and uses
+//      that to determine who is currently at an advantage. However it also gives a small bonus to a player
+//      who is actively controlling the center of the board, as that is generally an advantageous position.
 
 public class SmarterBEF implements ToIntFunction<Checkerboard> {
     public int applyAsInt(Checkerboard c) {
