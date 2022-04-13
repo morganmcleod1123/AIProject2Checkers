@@ -6,17 +6,20 @@ import checkers.core.Move;
 import checkers.core.PlayerColor;
 import core.Duple;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
 // CheckersSearcher provided by Professor Gabriel Ferrer
 
-public class AlphaBeta extends CheckersSearcher {
+public class AlphaBetaCopy extends CheckersSearcher {
     private int numNodes = 0;
     private final int win = Integer.MAX_VALUE;
     private final int lose = win * -1;
 
-    public AlphaBeta(ToIntFunction<Checkerboard> e) {
+    public AlphaBetaCopy(ToIntFunction<Checkerboard> e) {
         super(e);
     }
 
@@ -49,18 +52,30 @@ public class AlphaBeta extends CheckersSearcher {
             Optional<Duple<Integer, Move>> best = Optional.empty();
             // implement ordering heuristic here. sort a list from board.getNextBoards() in ascending order.
             // Then go through them.
+            ArrayList<Optional<Duple<Integer, Move>>> outcomeList = new ArrayList<>();
             for (Checkerboard alternative: board.getNextBoards()){
                 numNodes ++;
-                int outcome;
+                Optional<Duple<Integer, Move>> outcome;
+                int outcomeInt;
+                Move outcomeMove;
                 if (board.getCurrentPlayer() != alternative.getCurrentPlayer()){
-                    outcome = selectMove(alternative, depth + 1, -beta, -alpha).get().getFirst() * -1;
+                    outcome = selectMove(alternative, depth + 1, -beta, -alpha);
+                    outcomeInt = outcome.get().getFirst() * -1;
+                    outcomeMove = alternative.getLastMove();
                 } else {
-                    outcome = selectMove(alternative, depth +1, alpha, beta).get().getFirst();
+                    outcome = selectMove(alternative, depth +1, alpha, beta);
+                    outcomeInt = outcome.get().getFirst();
+                    outcomeMove = alternative.getLastMove();
                 }
-                if(best.isEmpty() || outcome > best.get().getFirst()){
-                    best = Optional.of(new Duple<>(outcome, alternative.getLastMove()));
+                outcomeList.add(Optional.of(new Duple<>(outcomeInt, outcomeMove)));
+            }
+            // Sort outcomeList in descending order
+            Collections.sort(outcomeList, Collections.reverseOrder());
+            for(Optional<Duple<Integer, Move>> outcome : outcomeList){
+                if(best.isEmpty() || outcome.get().getFirst() > best.get().getFirst()){
+                    best = Optional.of(outcome.get());
                 }
-                alpha = Math.max(outcome, alpha);
+                alpha = Math.max(outcome.get().getFirst(), alpha);
                 if(alpha >= beta){
                     break;
                 }
